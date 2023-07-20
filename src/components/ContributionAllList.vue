@@ -20,7 +20,7 @@
             {{ item.name }}
           </ContributionCheckbox>
               <input class="input__count" type="text"
-                     v-model="item.count"
+                     v-model.number="item.count"
                      @change="onChange($event, list.id, item.id, 'count')"
               >
               <input class="input__color" type="color"
