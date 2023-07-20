@@ -1,7 +1,7 @@
 <template>
-<div class="diagram__item"  v-if="shuffleArray">
+<div class="diagram__item"  v-if="diagramSquares">
   <ContributionDiagramSquare
-      v-for="(item, i) in shuffleArray"
+      v-for="(item, i) in diagramSquares"
       :key="i"
       @click="decrementCount(item.id)"
       :color="item.color" />
@@ -19,24 +19,20 @@ export default {
   emits: ['decrementCount'],
   data() {
     return {
-      shuffleArray: []
+      diagramSquares: []
     }
   },
   methods: {
-    pushSquares() {
-      this.shuffleArray = []
+    buildDiagram() {
+      this.diagramSquares = []
       this.items.forEach(elm => {
         if(elm.checked) {
           for (let i = 0; i < elm.count; i++) {
-            this.shuffleArray.push({color: elm.color, id: elm.id})
+            this.diagramSquares.push({color: elm.color, id: elm.id})
           }
         }
-
       })
-      this.onShuffleArray(this.shuffleArray)
-    },
-    onShuffleArray(arr) {
-      arr.sort(() => Math.random() - 0.5)
+      this.diagramSquares.sort(() => Math.random() - 0.5)
     },
     decrementCount(itemId) {
       this.$emit('decrementCount', itemId);
@@ -45,13 +41,13 @@ export default {
   watch: {
     items: {
       handler() {
-        this.pushSquares();
+        this.buildDiagram();
       },
       deep: true
     }
   },
   mounted() {
-    this.pushSquares()
+    this.buildDiagram()
   }
 }
 </script>

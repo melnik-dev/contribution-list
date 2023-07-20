@@ -2,8 +2,8 @@
   <div v-for="item in items" :key="`s${item.id}`">
     <div v-if="item.checked" class="diagram__item" >
       <ContributionDiagramSquare
-          v-for="n in item.count"
-          :key="`s${item.id}${n}`"
+          v-for="index in item.count"
+          :key="`s${item.id}${index}`"
           @click="decrementCount(item.id)"
           :color="item.color"/>
     </div>

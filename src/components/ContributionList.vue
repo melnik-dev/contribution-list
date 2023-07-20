@@ -1,21 +1,14 @@
 <template>
-  <div>
-    <div class="list">
-      <ContributionCheckbox
-          @change="toggleAllItems"
-          v-model="listChecked"
-          :id="`list-${list.id}`"
-          :label="`list-${list.id}`"
-          :name="`list-${list.id}`"
-          :point="isPoint"
-      >
-        {{ list.name }}
-      </ContributionCheckbox>
-    </div>
-    <div class="items">
-
-    </div>
-  </div>
+  <ContributionCheckbox
+      @change="toggleAllItems"
+      v-model="listChecked"
+      :id="`list-${list.id}`"
+      :label="`list-${list.id}`"
+      :name="`list-${list.id}`"
+      :point="isPoint"
+  >
+    {{ list.name }}
+  </ContributionCheckbox>
 </template>
 
 <script>
@@ -33,40 +26,26 @@ export default {
     };
   },
   computed: {
-    isCheckedOneItem() {
+    hasCheckedItem() {
       // Проверяем, отмечен хоть один Items
-      return this.list.items.some(item => item.checked === true)
+      return this.list.items && this.list.items.some(item => item.checked === true)
     },
-    isCheckedAllItem() {
+    hasCheckedAllItem() {
       // Проверяем, отмечены ли все Items
-      return this.list.items.every(item => item.checked === true)
+      return this.list.items && this.list.items.every(item => item.checked === true)
     },
     isPoint() {
-      if (this.isCheckedOneItem && !this.isCheckedAllItem) {
-        return true;
-      }
-      return false
+      return this.hasCheckedItem && !this.hasCheckedAllItem
     }
   },
   methods: {
     toggleAllItems() {
-      console.log('toggleAllItems')
-      if (this.isCheckedOneItem) {
-        // Снимаемсо всех
-        this.list.items.forEach(item => (item.checked = false))
-        this.listChecked = false
-      } else {
-        // Отмечаем все
-        this.list.items.forEach(item => (item.checked = true))
-        this.listChecked = true
-      }
+      const haveCheckAll = !this.hasCheckedItem
+      this.list.items.forEach(item => {item.checked = haveCheckAll})
+      this.listChecked = haveCheckAll
     },
     updateListCheckStatus() {
-      if (this.isCheckedAllItem) {
-        this.listChecked = true
-      } else {
-        this.listChecked = false
-      }
+      this.listChecked = this.hasCheckedAllItem || false
     }
   },
   watch: {

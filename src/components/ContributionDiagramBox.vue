@@ -1,39 +1,46 @@
 <template>
-<div class="diagram__box">
-  <button @click="sortedDiagram">
-    {{ isSorted ? 'Перемешать' : 'Сортировать'}}
-  </button>
-  <ContributionDiagramSorted
-      @decrement-count="decrementCount"
-      v-if="isSorted"
-      :items="items" />
-  <ContributionDiagramMixed
-      @decrement-count="decrementCount"
-      v-else :items="items" />
-</div>
+  <div class="diagram__box">
+    <button v-if="hasCheckedItem" @click="toggleSorting">
+      {{ isSortedDiagram ? 'Перемешать' : 'Сортировать' }}
+    </button>
+    <ContributionDiagramSorted
+        @decrement-count="decrementCount"
+        v-if="isSortedDiagram"
+        :items="items"/>
+    <ContributionDiagramMixed
+        @decrement-count="decrementCount"
+        v-else :items="items"/>
+  </div>
 </template>
 
 <script>
 
 import ContributionDiagramSorted from './ContributionDiagramSorted.vue'
 import ContributionDiagramMixed from './ContributionDiagramMixed.vue'
+
 export default {
   name: "ContributionDiagramBox",
   components: {
     ContributionDiagramSorted,
     ContributionDiagramMixed
   },
-  props: ['listId','items', ],
+  props: ['listId', 'items',],
   emits: ['decrementCount'],
   data() {
     return {
-      isSorted: true
+      isSortedDiagram: true
+    }
+  },
+  computed: {
+    hasCheckedItem() {
+      // Проверяем, отмечен хоть один Items
+      return this.items && this.items.some(item => item.checked === true)
     }
   },
   methods: {
-  sortedDiagram() {
-    this.isSorted = !this.isSorted
-  },
+    toggleSorting() {
+      this.isSortedDiagram = !this.isSortedDiagram
+    },
     decrementCount(itemId) {
       this.$emit('decrementCount', {
         itemId: itemId,

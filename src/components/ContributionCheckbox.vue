@@ -17,8 +17,6 @@
         <rect v-if="point" class="check__mark--square" x="7" y="7" width="6" height="6" rx="1"></rect>
       </svg>
     </div>
-
-    {{modelValue }}
     <slot></slot>
   </label>
 

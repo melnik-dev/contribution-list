@@ -2,12 +2,10 @@
   <details>
     <summary>
       <slot name="title">
-        title
       </slot>
     </summary>
     <p>
       <slot name="subtitle">
-        text
       </slot>
     </p>
 
