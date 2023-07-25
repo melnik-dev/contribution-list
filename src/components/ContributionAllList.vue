@@ -19,14 +19,14 @@
           >
             {{ item.name }}
           </ContributionCheckbox>
-              <input class="input__count" type="text"
-                     v-model.number="item.count"
-                     @change="onChange($event, list.id, item.id, 'count')"
-              >
-              <input class="input__color" type="color"
-                     v-model="item.color"
-                     @change="onChange($event, list.id, item.id, 'color')"
-              >
+          <input class="input__count" type="number"
+                 v-model.number="item.count"
+                 @input="onChange($event, list.id, item.id, 'count')"
+          >
+          <input class="input__color" type="color"
+                 v-model="item.color"
+                 @change="onChange($event, list.id, item.id, 'color')"
+          >
         </ContributionBox>
       </template>
 
@@ -57,10 +57,22 @@ export default {
       }
       return null;
     },
+    inputRange(inputValue, min, max) {
+      let value = parseInt(inputValue)
+
+      if (isNaN(value) || value < min) {
+        value = min
+      } else if (value > max) {
+        value = max
+      }
+      return value
+    },
     onChange(evt, listId, itemId, prop) {
       const item = this.findItemById(listId, itemId)
       if (item) {
-        item[prop] = prop === 'count' ? Number(evt.target.value) : evt.target.value
+        item[prop] = prop === 'count' ?
+            this.inputRange(evt.target.value, 0, 100) :
+            evt.target.value
       }
     },
   }
@@ -74,6 +86,16 @@ export default {
   border: none;
 }
 
+.input__count::-webkit-outer-spin-button,
+.input__count::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input__count[type=number] {
+  -moz-appearance: textfield;
+}
+
 .input__color {
   width: 22px;
   height: 22px;
@@ -81,13 +103,16 @@ export default {
   border: 0;
   cursor: pointer;
 }
+
 .input__color::-webkit-color-swatch-wrapper {
   padding: 0;
   border: none;
 }
+
 .input__color::-moz-color-swatch {
   border: none;
 }
+
 .input__color::-webkit-color-swatch {
   border: none;
 }
